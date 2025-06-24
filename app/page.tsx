@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import CollapsedPill from "./components/collapsedPill";
 import ExpandedPill from "./components/ExpandedPill";
+import ArrowButton from "./components/ArrowButton";
 
 export default function Home() {
   const [servicePills, setServicePills] = useState([
@@ -53,6 +54,20 @@ export default function Home() {
     );
   };
 
+  const handleNextService = () => {
+    const currentIndex = servicePills.findIndex((pill) => pill.activeService);
+    if (currentIndex < servicePills.length - 1) {
+      handleServiceClick(currentIndex + 1);
+    }
+  };
+
+  const handlePreviousService = () => {
+    const currentIndex = servicePills.findIndex((pill) => pill.activeService);
+    if (currentIndex > 0) {
+      handleServiceClick(currentIndex - 1);
+    }
+  };
+
   const heights = [
     "h-12 md:h-[530px]",
     "h-12 md:h-[450px]",
@@ -67,7 +82,7 @@ export default function Home() {
     <div className="w-full flex justify-center">
       <div className="w-full max-w-[1440px] h-auto min-h-[691px] mx-4 md:mx-0 relative">
         <div className="flex flex-col md:flex-row items-center pt-8 md:pt-12 px-4 md:pl-[120px] md:pr-8"></div>
-        <div className="relative flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-center w-full">
+        <div className="relative flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-center flex-wrap w-full ">
           {servicePills.map((pill, index) => {
             const isActive = pill.activeService;
 
@@ -103,6 +118,18 @@ export default function Home() {
               </div>
             );
           })}
+          <div className="hidden md:flex gap-4 mt-4 justify-end me-36 w-full">
+            <ArrowButton
+              disabled={servicePills[0].activeService}
+              onClick={handlePreviousService}
+              direction="left"
+            />
+            <ArrowButton
+              disabled={servicePills[servicePills.length - 1].activeService}
+              onClick={handleNextService}
+              direction="right"
+            />
+          </div>
         </div>
       </div>
     </div>
