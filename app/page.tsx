@@ -1,6 +1,6 @@
 "use client";
 
-import { CONTAINER_CLASSES } from "@/constants";
+import { CONTAINER_CLASSES } from "@/utils/constants";
 import ArrowButton from "./components/ArrowButton";
 import { ServicePillComponent } from "./components/ServicePillComponent";
 import { useServicePills } from "./hooks/useServicePills";

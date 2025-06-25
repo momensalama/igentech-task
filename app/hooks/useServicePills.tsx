@@ -1,5 +1,5 @@
-import { API_ENDPOINT } from "@/constants";
-import { ServicePill } from "@/types";
+import { API_ENDPOINT } from "@/utils/constants";
+import { ServicePill } from "@/utils/types";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const useServicePills = () => {
