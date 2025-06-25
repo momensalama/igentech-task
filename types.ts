@@ -7,3 +7,10 @@ export interface ServicePill {
   activeService?: boolean;
   hasSpace?: boolean;
 }
+
+export interface ServicePillComponentProps {
+  pill: ServicePill;
+  index: number;
+  isActive: boolean;
+  onClick: () => void;
+}
