@@ -1,6 +1,6 @@
 import { PILL_STYLES } from "@/utils/constants";
-import { ServicePill, ServicePillComponentProps } from "@/utils/types";
-import React, { useMemo } from "react";
+import { ServicePillComponentProps } from "@/utils/types";
+import { useMemo } from "react";
 import ExpandedPill from "./ExpandedPill";
 import CollapsedPill from "./collapsedPill";
 
