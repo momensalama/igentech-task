@@ -1,55 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CollapsedPill from "./components/collapsedPill";
 import ExpandedPill from "./components/ExpandedPill";
 import ArrowButton from "./components/ArrowButton";
+import { ServicePill } from "@/types";
 
 export default function Home() {
-  const [servicePills, setServicePills] = useState([
-    {
-      name: "Software Solutions Experts",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      bg: "bg-[#ccf5ff]",
-      activeService: true,
-    },
-    {
-      name: "eKYC",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      bg: "bg-[#dbf5ff]",
-      activeService: false,
-    },
-    {
-      name: "Payment Links",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      bg: "bg-[#e5f8ff]",
-      activeService: false,
-    },
-    {
-      name: "Invoicing",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      bg: "bg-[#f0fbff]",
-      activeService: false,
-    },
-    {
-      name: "Consultancy",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos.",
-      bg: "bg-[#f4fcff]",
-      hasSpace: true,
-      activeService: false,
-    },
-  ]);
+  const [servicePills, setServicePills] = useState<ServicePill[]>([]);
 
   const handleServiceClick = (clickedIndex: number) => {
     setServicePills((prevServices) =>
       prevServices.map((service, index) => ({
         ...service,
-        activeService: index === clickedIndex ? true : false,
+        activeService: index === clickedIndex,
       }))
     );
   };
@@ -72,11 +36,27 @@ export default function Home() {
     "h-12 md:h-[530px]",
     "h-12 md:h-[450px]",
     "h-12 md:h-[370px]",
-    "h-12 md:h-[290px]",
-    "h-12 md:h-[210px]",
   ];
 
-  const mobileWidth = ["w-[100%]", "w-[90%]", "w-[80%]", "w-[70%]", "w-[60%]"];
+  const mobileWidth = ["w-[100%]", "w-[90%]", "w-[80%]"];
+
+  const fetchServicePills = async () => {
+    const response = await fetch(
+      "https://backend.igentech.co/api/v1/content/software-development"
+    );
+    const data = await response.json();
+    const services = data.data.services.map(
+      (service: ServicePill, index: number) => ({
+        ...service,
+        activeService: index === 0, // to Set first service as active by default
+      })
+    );
+    setServicePills(services);
+  };
+
+  useEffect(() => {
+    fetchServicePills();
+  }, []);
 
   return (
     <div className="w-full flex justify-center">
@@ -90,42 +70,49 @@ export default function Home() {
               <div
                 key={`service-pill-${index}`}
                 className={`
-                    ${pill.bg}
                     ${
                       isActive
-                        ? "h-[340px] md:h-[530px] w-full md:w-[893px]"
+                        ? `${
+                            index === 1 ? "h-[390px]" : "h-[360px]"
+                          } md:h-[530px] w-full md:w-[893px]`
                         : `${heights[index]} md:w-16 ${mobileWidth[index]} cursor-pointer hover:shadow-lg`
                     }
                     rounded-[32px] md:rounded-[64px] border
-                    ${isActive ? "border-[#b2edff]" : "border-[#ccf3ff]"}
                     ml-0 py-8 md:py-0
                     transition-all duration-500 ease-in-out overflow-hidden relative
                     flex-shrink-0 flex items-center justify-center
                   `}
+                style={{
+                  backgroundColor: pill.service_color,
+                  borderColor: pill.service_color,
+                }}
                 onClick={() => handleServiceClick(index)}
               >
                 {isActive ? (
                   <ExpandedPill
-                    name={pill.name}
-                    description={pill.description}
+                    name={pill.service_title}
+                    description={pill.service_description}
                   />
                 ) : (
                   <CollapsedPill
                     hasSpace={pill.hasSpace || false}
-                    name={pill.name}
+                    name={pill.service_title}
                   />
                 )}
               </div>
             );
           })}
+
           <div className="hidden md:flex gap-4 mt-4 justify-end me-36 w-full">
             <ArrowButton
-              disabled={servicePills[0].activeService}
+              disabled={servicePills[0]?.activeService || false}
               onClick={handlePreviousService}
               direction="left"
             />
             <ArrowButton
-              disabled={servicePills[servicePills.length - 1].activeService}
+              disabled={
+                servicePills[servicePills.length - 1]?.activeService || false
+              }
               onClick={handleNextService}
               direction="right"
             />
